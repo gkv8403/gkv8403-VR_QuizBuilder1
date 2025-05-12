@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ec38bcb571e7f54bb5bddee3a9e7dc0, type: 3}
+  m_Name: 1
+  m_EditorClassIdentifier: 
+  questions:
+  - questionText: What is apple?
+    answers:
+    - fruit
+    - cat
+    - boy
+    - any
+    correctOptionIndex: 0
+  - questionText: What is Banana?
+    answers:
+    - cat
+    - boy
+    - fruit
+    - any
+    correctOptionIndex: 3
+  - questionText: What is Cow
+    answers:
+    - animal
+    - boy
+    - fruit
+    - any
+    correctOptionIndex: 3
