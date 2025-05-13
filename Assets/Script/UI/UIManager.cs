@@ -5,96 +5,76 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
+    // Reference to the NetworkManager (for managing host/join operations)
     public NetworkManager networkManager;
-    public GameObject hostButton;
-    public GameObject joinButton;
-    public TextMeshProUGUI statusText;
-    public TextMeshProUGUI playerListText;
-    public GameObject uiCanvas;
+
+    // UI Elements
+    public TextMeshProUGUI statusText;      // Displays the current connection status (e.g., Hosting, Joining)
+    public TextMeshProUGUI playerListText;  // Displays the list of players in the room
+    public GameObject uiCanvas;             // Main UI Canvas for hosting/joining options
+
+    // Singleton instance of UIManager for easy access
     public static UIManager Instance;
 
+    // Called when the script instance is being loaded
     private void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
+    /// <summary>
+    /// Updates the player list UI with the names of connected players.
+    /// </summary>
+    /// <param name="players">List of connected players (PlayerRef)</param>
+    /// <param name="playerNames">Dictionary mapping PlayerRef to player names</param>
+    public void UpdatePlayerList(List<PlayerRef> players, Dictionary<PlayerRef, string> playerNames)
     {
-        CheckSession();
+        // Clear the player list text
+        playerListText.text = "Players in Room:\n";
 
+        // Loop through the list of players
+        foreach (var player in players)
+        {
+            // Check if the player has a name in the dictionary
+            if (playerNames.TryGetValue(player, out string playerName))
+            {
+                // Display player name
+                playerListText.text += $"{playerName}\n";
+            }
+            else
+            {
+                // Display a default name if player name is not found
+                playerListText.text += $"Player_{player.PlayerId} (Unnamed)\n";
+            }
+        }
     }
 
    
-    public void CheckSession()
-    {
-        if (networkManager.IsHost)
-        {
-            HideUI();
-            statusText.text = "Hosting Game... Waiting for players.";
-        }
-      
-        else if (networkManager.IsClient)
-        {
-            hostButton.SetActive(false);
-            joinButton.SetActive(true);
-            statusText.text = "Join an existing game.";
-        }
-        else
-        {
-            ShowUI();
-            statusText.text = "Select Host or Join to start.";
-        }
-    }
 
-    public void UpdatePlayerList(List<PlayerRef> players, Dictionary<PlayerRef, string> playerNames)
-    {
-        playerListText.text = "Players in Game:\n";
-        foreach (var player in players)
-        {
-            playerListText.text += $"- {playerNames[player]}\n";
-        }
-    }
-
-
-    public void OnHostGameButtonClicked()
-    {
-        networkManager.HostGame();
-        HideUI();
-        statusText.text = "Hosting Game... Waiting for players.";
-    }
-
-    public void OnJoinGameButtonClicked()
-    {
-        networkManager.JoinSession();
-        HideUI();
-        statusText.text = "Joining Game...";
-    }
-
+    /// <summary>
+    /// Hides the main UI canvas (used when hosting or joining a game).
+    /// </summary>
     private void HideUI()
     {
         if (uiCanvas != null)
-            uiCanvas.SetActive(false);
-        else
-        {
-            hostButton.SetActive(false);
-            joinButton.SetActive(false);
-        }
+            uiCanvas.SetActive(false); // Deactivate the UI Canvas
     }
 
+    /// <summary>
+    /// Shows the main UI canvas (used when disconnected).
+    /// </summary>
     private void ShowUI()
     {
         if (uiCanvas != null)
-            uiCanvas.SetActive(true);
-        else
-        {
-            hostButton.SetActive(true);
-            joinButton.SetActive(true);
-        }
+            uiCanvas.SetActive(true); // Activate the UI Canvas
     }
 
+    /// <summary>
+    /// Handles UI changes when the player is disconnected from the network.
+    /// </summary>
     public void OnDisconnected()
     {
-        ShowUI();
-        statusText.text = "Disconnected. Please select Host or Join.";
+        ShowUI(); // Show the main UI
+        statusText.text = "Disconnected. Please select Host or Join."; // Update status text
     }
 }

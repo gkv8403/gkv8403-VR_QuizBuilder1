@@ -24,14 +24,14 @@ public class ScoreManager : NetworkBehaviour
     // Increase score
     public void AddScore(int amount)
     {
-       // if (!IsOwner) return; // Only the owner can modify the score
+        // if (!IsOwner) return; // Only the owner can modify the score
         Score += amount;
     }
 
     // Decrease score (if needed)
     public void DeductScore(int amount)
     {
-      //  if (!IsOwner) return;
+        //  if (!IsOwner) return;
         Score -= amount;
     }
 }
